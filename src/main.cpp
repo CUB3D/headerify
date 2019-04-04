@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     int size = std::filesystem::file_size(input);
 
     std::ifstream reader{input, std::ios::binary};
-    std::ofstream writer{input.replace_extension(".h")};
+    std::ofstream writer{input.replace_extension(".c")};
     
     std::string inputName = std::string{argv[1]};
     
@@ -31,9 +31,7 @@ int main(int argc, char** argv) {
     printf("Creating header of '%s' with size '%d'\n", input.c_str(), size);
 
     // Add the prelude
-    writer << "#ifndef " << outputNameC << "\n"
-           << "#define " << outputNameC << "\n\n"
-           << "const char " << outputNameC << "[] = {" << "\n"
+    writer << "const char " << outputNameC << "[] = {" << "\n"
            << "    ";
 
 
@@ -70,8 +68,7 @@ int main(int argc, char** argv) {
 
     // Add the footer
     writer << "};\n\n"
-           << "const size_t " << outputNameC << "_LENGTH = sizeof(" << outputNameC << ");\n"
-           << "#endif " << outputNameC << "\n";
+           << "const size_t " << outputNameC << "_LENGTH = sizeof(" << outputNameC << ");\n";
 
     writer.flush();
     writer.close();
