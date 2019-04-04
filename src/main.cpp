@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     int size = std::filesystem::file_size(input);
 
     std::ifstream reader{input, std::ios::binary};
-    std::ofstream writer{input.replace_extension(".h"), std::ios::binary};
+    std::ofstream writer{input.replace_extension(".h")};
     
     std::string inputName = std::string{argv[1]};
     
@@ -38,10 +38,24 @@ int main(int argc, char** argv) {
 
 
     writer << std::hex;
-    char data;
+    int data;
     int count{0};
-    while(reader.good()) {
-        reader.read(&data, 1);
+    while((data = reader.get()) != -1) {
+        // Add a comma if printing anything other than the first byte on a line
+        if(count > 0) {
+            writer << ",";
+
+            // If we have printed too many bytes on this line then start a new line and indent
+            if (count >= 16) {
+                writer << "\n    ";
+                count = 0;
+            } else {
+                // otherwise just continue this line
+                writer << " ";
+            }
+        }
+
+        // Add prefix
         writer << "0x";
 
         // Pad the number to be a fixed width of 4 chars
@@ -49,26 +63,10 @@ int main(int argc, char** argv) {
             writer << "0";
         }
 
-        writer << (char) data;
+        writer << data;
         count++;
-
-        if(reader.good()) {
-            // Add a comma if we still have bytes left
-            writer << ",";
-
-            // If we have printed too many bytes on this line then start a new line and indent
-            if(count >= 16) {
-                writer << "\n    ";
-                count = 0;
-            } else {
-                // otherwise just continue this line
-                writer << " ";
-            }
-        } else {
-            writer << "\n";
-        }
     }
-    writer << std::dec;
+    writer << std::dec << "\n";
 
     // Add the footer
     writer << "};\n\n"
