@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
             writer << "0";
         }
 
-        writer << (int) data;
+        writer << (char) data;
         count++;
 
         if(reader.good()) {
