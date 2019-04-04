@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
 
     // Add the footer
     writer << "};\n\n"
-           << "const size_t " << outputNameC << "_length = sizeof(" << outputNameC << ");\n"
+           << "const size_t " << outputNameC << "_LENGTH = sizeof(" << outputNameC << ");\n"
            << "#endif " << outputNameC << "\n";
 
     writer.flush();
